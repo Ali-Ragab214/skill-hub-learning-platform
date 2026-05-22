@@ -1,7 +1,7 @@
 package com.example.Skill_Hub_Learning_Platform.domain.models;
 
-import com.example.Skill_Hub_Learning_Platform.domain.enums.Level;
-import com.example.Skill_Hub_Learning_Platform.domain.enums.Status;
+import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseLevel;
+import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
@@ -31,11 +31,11 @@ public class Course extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Level level;
+    private CourseLevel level;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.DRAFT;
+    private CourseStatus status = CourseStatus.DRAFT;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", nullable = false)

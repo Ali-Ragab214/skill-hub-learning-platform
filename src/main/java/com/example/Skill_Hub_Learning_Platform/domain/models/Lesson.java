@@ -27,6 +27,10 @@ public class Lesson extends BaseEntity {
     @Column(nullable = false)
     private Boolean isPreview = false;
 
+    @Column(nullable = false)
+    @Min(value = 0, message = "Order index cannot be negative")
+    private Integer orderIndex = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
