@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
@@ -15,10 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "courses")
+@Table(name = "courses", uniqueConstraints = @UniqueConstraint(columnNames = "title", name = "uk_course_title"))
 public class Course extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(min = 4, max = 100, message = "Title must be between 4 and 100 characters")
     private String title;
 
@@ -27,7 +28,7 @@ public class Course extends BaseEntity {
 
     @Column(nullable = false)
     @DecimalMin(value = "0.0", inclusive = true, message = "Price cannot be negative")
-    private Double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
