@@ -5,6 +5,7 @@ import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,7 +20,7 @@ public class CourseResponse {
     private CourseLevel level;
     private CourseStatus status;
     private UserResponse instructor;
-    private int totalSections;
+    List<SectionResponse> sections;
     private int totalEnrollments;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

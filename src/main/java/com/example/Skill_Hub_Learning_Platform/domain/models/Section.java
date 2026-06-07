@@ -17,11 +17,11 @@ import java.util.List;
 public class Section extends BaseEntity {
 
     @Column(nullable = false)
-    @Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
+    //@Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
     private String title;
 
     @Column(nullable = false)
-    @Min(value = 0, message = "Order index cannot be negative")
+    //@Min(value = 0, message = "Order index cannot be negative")
     private Integer orderIndex = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,6 +29,6 @@ public class Section extends BaseEntity {
     private Course course;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("id ASC")
+    @OrderBy("orderIndex ASC")
     private List<Lesson> lessons = new ArrayList<>();
 }

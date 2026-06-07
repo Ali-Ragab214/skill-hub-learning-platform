@@ -8,4 +8,5 @@ import java.util.List;
 public interface SectionRepository extends JpaRepository<Section,Long> {
     List<Section> findByCourseIdOrderByOrderIndexAsc(Long courseId);
     void deleteByCourseId(Long courseId);
+    int countByCourseId(Long courseId);
 }

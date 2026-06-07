@@ -14,7 +14,7 @@ import lombok.*;
 public class Lesson extends BaseEntity {
 
     @Column(nullable = false)
-    @Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
+    //@Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
     private String title;
 
     @Column(nullable = false)

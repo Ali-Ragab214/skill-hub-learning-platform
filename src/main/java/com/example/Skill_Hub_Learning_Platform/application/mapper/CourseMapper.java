@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class CourseMapper {
 
     private static  UserMapper userMapper = new UserMapper();
+    private final SectionMapper sectionMapper;
 
     public  Course toEntity(CourseRequest request) {
         return Course.builder()
@@ -24,11 +25,9 @@ public class CourseMapper {
                 .build();
     }
 
-    public  CourseResponse toResponse(Course course) {
-
+    public CourseResponse toResponse(Course course) {
         UserResponse instructor =
                 userMapper.toUserResponse(course.getInstructor());
-
         return CourseResponse.builder()
                 .id(course.getId())
                 .title(course.getTitle())
@@ -37,19 +36,14 @@ public class CourseMapper {
                 .level(course.getLevel())
                 .status(course.getStatus())
                 .instructor(instructor)
-
-                .totalSections(
-                        course.getSections() != null
-                                ? course.getSections().size()
-                                : 0
-                )
-
+                .sections(course.getSections().stream()
+                        .map(sectionMapper::toResponse)
+                        .toList())
                 .totalEnrollments(
                         course.getEnrollments() != null
                                 ? course.getEnrollments().size()
                                 : 0
                 )
-
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();
