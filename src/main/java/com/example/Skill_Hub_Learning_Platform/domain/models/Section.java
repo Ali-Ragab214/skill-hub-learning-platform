@@ -13,7 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "sections")
+@Table(name = "sections" ,
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"course_id", "title"}
+                )
+        }
+)
 public class Section extends BaseEntity {
 
     @Column(nullable = false)

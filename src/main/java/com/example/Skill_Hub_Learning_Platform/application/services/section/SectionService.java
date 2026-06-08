@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SectionService {
     SectionResponse createSection(Long courseId, SectionRequest request, String instructorEmail);
-    SectionResponse getSectionById(Long id);
+    SectionResponse getSectionById(Long courseId, Long id);
     SectionResponse getSectionByTitleAndCourseId(String name, Long courseId);
     PaginationResponse<SectionResponse> getSectionsByCourse(Long courseId,int page , int size);
     SectionResponse updateSection(Long courseId,Long id, SectionRequest request, String instructorEmail);

@@ -32,7 +32,8 @@ public class SectionServiceImpl implements SectionService {
       maxOrder == null ? 0 : maxOrder + 1
       );*/
 
-
+//dont forget to make sure that section tittle is unique in each course
+     //also make sure that the order index is unique in each course => tomorrow
      @Override
      public SectionResponse createSection(Long courseId, SectionRequest request, String instructorEmail) {
          var course = courseRepository.findById(courseId)
@@ -53,8 +54,8 @@ public class SectionServiceImpl implements SectionService {
 
     @Transactional(readOnly = true)
     @Override
-    public SectionResponse getSectionById(Long id) {
-        var section = sectionRepository.findById(id)
+    public SectionResponse getSectionById(Long courseId, Long id) {
+        var section = sectionRepository.findByIdAndCourseId(id, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found with id: " + id));
         return sectionMapper.toResponse(section);
     }
