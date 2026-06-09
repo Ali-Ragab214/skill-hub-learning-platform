@@ -6,5 +6,6 @@ public record LessonResponse(
         String videoUrl,
         Integer duration,
         Boolean isPreview,
-        Integer orderIndex
+        Integer orderIndex,
+        Long sectionId
 ) {}

@@ -9,6 +9,7 @@ import com.example.Skill_Hub_Learning_Platform.application.responses.PaginationR
 import com.example.Skill_Hub_Learning_Platform.domain.models.Course;
 import com.example.Skill_Hub_Learning_Platform.domain.models.Section;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.CourseRepository;
+import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,6 @@ public class SectionServiceImpl implements SectionService {
     private  final SectionRepository sectionRepository;
     private  final CourseRepository courseRepository;
     private final SectionMapper sectionMapper;
-
 
      /** Integer maxOrder =
       sectionRepository.findMaxOrderIndexByCourseId(courseId);
@@ -139,7 +139,6 @@ public class SectionServiceImpl implements SectionService {
                         ));
 
         validateOwnership(section, instructorEmail);
-
         sectionRepository.delete(section);
     }
     //I did it for creation

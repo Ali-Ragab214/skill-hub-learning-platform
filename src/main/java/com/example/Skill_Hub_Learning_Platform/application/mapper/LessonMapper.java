@@ -17,7 +17,8 @@ public class LessonMapper {
                 lesson.getVideoUrl(),
                 lesson.getDuration(),
                 lesson.getIsPreview(),
-                lesson.getOrderIndex()
+                lesson.getOrderIndex(),
+                lesson.getSection().getId()
         );
     }
 
@@ -26,7 +27,7 @@ public class LessonMapper {
                 .title(request.getTitle())
                 .videoUrl(request.getVideoUrl())
                 .duration(request.getDuration())
-                .isPreview(request.getIsPreview() != null ? request.getIsPreview() : false)
+                .isPreview(request.getIsPreview())
                 .orderIndex(request.getOrderIndex() != null ? request.getOrderIndex() : 0)
                 .section(section)
                 .build();

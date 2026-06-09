@@ -11,6 +11,8 @@ import com.example.Skill_Hub_Learning_Platform.domain.enums.Role;
 import com.example.Skill_Hub_Learning_Platform.domain.models.Course;
 import com.example.Skill_Hub_Learning_Platform.domain.models.User;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.CourseRepository;
+import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonRepository;
+import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,6 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private  final CourseMapper courseMapper;
     private  final UserRepository userRepository;
-
 
     @Override
     public CourseResponse createCourse(CourseRequest request, String instructorEmail) {
@@ -200,7 +201,6 @@ public class CourseServiceImpl implements CourseService {
 
         // Validate ownership
         validateOwnership(course, instructorEmail);
-
         courseRepository.delete(course);
     }
 

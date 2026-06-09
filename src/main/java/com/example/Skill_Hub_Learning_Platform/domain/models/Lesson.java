@@ -10,7 +10,13 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "lessons")
+@Table(name = "lessons" ,
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"title" ,"section_id"}
+                )
+        }
+)
 public class Lesson extends BaseEntity {
 
     @Column(nullable = false)
@@ -25,9 +31,11 @@ public class Lesson extends BaseEntity {
     private Integer duration;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isPreview = false;
 
     @Column(nullable = false)
+    @Builder.Default
     @Min(value = 0, message = "Order index cannot be negative")
     private Integer orderIndex = 0;
 
