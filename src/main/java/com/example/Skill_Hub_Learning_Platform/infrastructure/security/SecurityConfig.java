@@ -59,6 +59,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/courses/*/sections").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/courses/*/sections/**").hasRole("INSTRUCTOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/*/sections/**").hasRole("INSTRUCTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/courses/*/sections/*/lessons/preview").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/courses/*/sections/*/lessons").hasAnyRole("STUDENT", "INSTRUCTOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/courses/*/sections/*/lessons/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/courses/*/sections/*/lessons").hasRole("INSTRUCTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/courses/*/sections/*/lessons/**").hasRole("INSTRUCTOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/courses/*/sections/*/lessons/**").hasRole("INSTRUCTOR")
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

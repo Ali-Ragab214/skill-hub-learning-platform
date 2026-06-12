@@ -6,6 +6,8 @@ import com.example.Skill_Hub_Learning_Platform.application.dto.response.UserResp
 import com.example.Skill_Hub_Learning_Platform.domain.models.Course;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,6 +46,24 @@ public class CourseMapper {
                                 ? course.getEnrollments().size()
                                 : 0
                 )
+                .createdAt(course.getCreatedAt())
+                .updatedAt(course.getUpdatedAt())
+                .build();
+    }
+
+    public CourseResponse toCreationResponse(Course course) {
+        UserResponse instructor =
+                userMapper.toUserResponse(course.getInstructor());
+        return CourseResponse.builder()
+                .id(course.getId())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .price(course.getPrice())
+                .level(course.getLevel())
+                .status(course.getStatus())
+                .instructor(instructor)
+                .sections(List.of())
+                .totalEnrollments(0)
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();

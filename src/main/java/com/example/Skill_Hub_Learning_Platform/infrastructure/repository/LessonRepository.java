@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
-    List<Lesson> findBySectionIdOrderByOrderIndexAsc(Long sectionId);
     List<Lesson> findBySectionIdAndIsPreview(Long sectionId, boolean isPreview);
     void deleteBySectionId(Long sectionId);
     void deleteBySectionCourseId(Long courseId);

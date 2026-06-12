@@ -25,7 +25,9 @@ public class LessonRequest {
     @Max(value = 300, message = "Duration cannot exceed 300 minutes")
     private Integer duration;
 
+    @NotNull(message = "isPreview is required")
     private Boolean isPreview = false;
 
+    @Min(value = 0, message = "Order index cannot be negative")
     private Integer orderIndex = 0;
 }

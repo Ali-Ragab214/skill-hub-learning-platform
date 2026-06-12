@@ -35,7 +35,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + instructorEmail));
         Course course = courseMapper.toEntity(request);
         course.setInstructor(instructor);
-        return courseMapper.toResponse(courseRepository.save(course));
+        return courseMapper.toCreationResponse(courseRepository.save(course));
     }
 
     @Transactional(readOnly = true)
