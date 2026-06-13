@@ -20,7 +20,6 @@ import java.util.List;
 public class Course extends BaseEntity {
 
     @Column(nullable = false, unique = true)
-    @Size(min = 4, max = 100, message = "Title must be between 4 and 100 characters")
     private String title;
 
     @Column(columnDefinition = "TEXT")
@@ -42,7 +41,9 @@ public class Course extends BaseEntity {
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    //avoid cascade.all {make it specific}
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL , orphanRemoval = true)
+//    @Builder.Default
     private List<Section> sections = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)

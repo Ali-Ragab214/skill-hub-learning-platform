@@ -14,6 +14,7 @@ import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.Section
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class SectionServiceImpl implements SectionService {
 //dont forget to make sure that section tittle is unique in each course
      //also make sure that the order index is unique in each course => tomorrow
      @Override
+//     @PreAuthorize("hasRole('INSTRUCTOR') and @courseOwnershipChecker.check(#courseId, authentication.name)")
      public SectionResponse createSection(Long courseId, SectionRequest request, String instructorEmail) {
          var course = courseRepository.findById(courseId)
                  .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
