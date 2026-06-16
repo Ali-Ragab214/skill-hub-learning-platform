@@ -21,7 +21,16 @@ BEGIN
     END IF;
 END$$;
 
--- Add Unique Constraint on (title, section_id)
-ALTER TABLE lessons
-    ADD CONSTRAINT uk_lesson_title_section UNIQUE (title, section_id);
+-- Add Unique Constraint on (title, section_id) if it doesn't already exist
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'uk_lesson_title_section'
+          AND conrelid = 'lessons'::regclass
+    ) THEN
+        ALTER TABLE lessons
+            ADD CONSTRAINT uk_lesson_title_section UNIQUE (title, section_id);
+    END IF;
+END $$;
 

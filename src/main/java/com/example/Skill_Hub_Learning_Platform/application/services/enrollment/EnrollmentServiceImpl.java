@@ -5,6 +5,8 @@ import com.example.Skill_Hub_Learning_Platform.application.dto.response.Enrollme
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.BadRequestException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.DuplicateResourceException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.ResourceNotFoundException;
+import com.example.Skill_Hub_Learning_Platform.application.exceptions.UnauthorizedException;
+import com.example.Skill_Hub_Learning_Platform.domain.enums.Role;
 import com.example.Skill_Hub_Learning_Platform.application.mapper.EnrollmentMapper;
 import com.example.Skill_Hub_Learning_Platform.application.responses.PaginationResponse;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
@@ -31,8 +33,13 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
 
     @Transactional
     @Override
-    public void enroll(Long courseId, String studentEmail) {
+    public EnrollmentResponse enroll(Long courseId, String studentEmail) {
         var student = getStudentByEmail(studentEmail);
+
+        if (student.getRole() != Role.Student) {
+            throw new UnauthorizedException("Only students can enroll in courses");
+        }
+
         var course = getCourseById(courseId);
 
         if (course.getStatus() != CourseStatus.PUBLISHED) {
@@ -49,7 +56,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
                 .progressPercentage(0)
                 .build();
 
-        enrollmentRepository.save(enrollment);
+        return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
     }
 
 

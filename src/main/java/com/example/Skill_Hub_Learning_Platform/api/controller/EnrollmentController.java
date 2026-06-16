@@ -31,12 +31,14 @@ public class EnrollmentController {
 
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping
-    public ResponseEntity<Void> enrollInCourse(
+    public ResponseEntity<ApiResponse<EnrollmentResponse>> enrollInCourse(
             @Valid @RequestBody EnrollmentRequest request,
             Authentication authentication
     ) {
-        enrollmentService.enroll(request.getCourseId(), authentication.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        EnrollmentResponse response = enrollmentService.enroll(request.getCourseId(), authentication.getName());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response, "Successfully enrolled in course: " + response.courseTitle(), HttpStatus.CREATED));
     }
 
     @PreAuthorize("hasRole('STUDENT')")

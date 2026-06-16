@@ -67,15 +67,12 @@ public class CourseController {
         );
     }
 
-    //temporary endpoint to get all courses, we will use pagination and filtering later
-//    @GetMapping
-//    public ResponseEntity<ApiResponse<List<CourseResponse>>> getAllCourses()
-//    {
-//        // Public endpoint - returns only published courses
-//        return ResponseEntity.ok(
-//                ApiResponse.success(courseService.getAllPublishedCourses(), "Courses retrieved successfully")
-//        );
-//    }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<CourseResponse>>> getAllPublishedCourses() {
+        return ResponseEntity.ok(
+                ApiResponse.success(courseService.getAllPublishedCourses(), "Courses retrieved successfully")
+        );
+    }
 
 //    @GetMapping("/admin/all")
 //    @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")

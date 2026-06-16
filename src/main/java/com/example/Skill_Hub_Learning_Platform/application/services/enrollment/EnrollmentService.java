@@ -7,7 +7,7 @@ import com.example.Skill_Hub_Learning_Platform.domain.models.User;
 import org.springframework.data.domain.Pageable;
 
 public interface EnrollmentService {
-    void enroll(Long courseId, String studentEmail);
+    EnrollmentResponse enroll(Long courseId, String studentEmail);
     void unenroll(Long courseId, String studentEmail);
     PaginationResponse<EnrollmentResponse> getMyEnrollments(String studentEmail, Pageable pageable);
     EnrollmentResponse getEnrollmentDetails(Long courseId, String studentEmail);
