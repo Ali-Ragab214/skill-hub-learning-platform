@@ -1,9 +1,8 @@
 package com.example.Skill_Hub_Learning_Platform.domain.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,7 +26,13 @@ public class Enrollment extends BaseEntity {
     private Course course;
 
     @Column(nullable = false)
-    @Min(value = 0, message = "Progress percentage cannot be negative")
-    @Max(value = 100, message = "Progress percentage cannot exceed 100")
     private Integer progressPercentage = 0;
+
+    @PrePersist
+    @PreUpdate
+    private void validateProgress() {
+        if (progressPercentage == null || progressPercentage < 0 || progressPercentage > 100) {
+            throw new IllegalArgumentException("Progress percentage must be between 0 and 100");
+        }
+    }
 }

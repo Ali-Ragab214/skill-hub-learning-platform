@@ -1,5 +1,6 @@
 package com.example.Skill_Hub_Learning_Platform.application.services.enrollment;
 
+import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateProgressRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.BadRequestException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.DuplicateResourceException;
@@ -96,7 +97,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
     public boolean isEnrolled(Long courseId, String studentEmail) {
         var student = getStudentByEmail(studentEmail);
         return enrollmentRepository
-                .existsByStudentIdAndCourseId(courseId, student.getId());
+                .existsByStudentIdAndCourseId(student.getId(), courseId);
     }
 
     @Transactional(readOnly = true)
@@ -104,6 +105,18 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
     public Long getEnrollmentCount(Long courseId) {
         getCourseById(courseId);
         return enrollmentRepository.countByCourseId(courseId);
+    }
+
+    @Override
+    public EnrollmentResponse updateProgress(Long enrollmentId, UpdateProgressRequest request) {
+
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
+
+        enrollment.setProgressPercentage(request.getProgressPercentage());
+
+        Enrollment updated = enrollmentRepository.save(enrollment);
+        return enrollmentMapper.toResponse(updated) ;
     }
 
 
@@ -118,7 +131,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
     }
 
     private Enrollment getEnrollmentByCourseAndStudent(Long courseId, Long studentId) {
-        return enrollmentRepository.findByStudentIdAndCourseId(courseId, studentId)
+        return enrollmentRepository.findByStudentIdAndCourseId(studentId, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
     }
 }

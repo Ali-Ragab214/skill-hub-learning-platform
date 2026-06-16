@@ -3,6 +3,8 @@ package com.example.Skill_Hub_Learning_Platform.domain.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,4 +29,11 @@ public class LessonProgress extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isCompleted = false;
+
+    @Column
+    private LocalDateTime completedAt;
 }

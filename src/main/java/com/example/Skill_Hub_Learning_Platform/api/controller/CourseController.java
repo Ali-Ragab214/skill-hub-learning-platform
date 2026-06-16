@@ -5,6 +5,7 @@ import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateCou
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.CourseResponse;
 import com.example.Skill_Hub_Learning_Platform.application.responses.ApiResponse;
 import com.example.Skill_Hub_Learning_Platform.application.services.course.CourseService;
+import com.example.Skill_Hub_Learning_Platform.application.services.enrollment.EnrollmentService;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseLevel;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CourseController {
 
     private  final CourseService courseService;
+    private  final EnrollmentService enrollmentService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CourseResponse>> getCourseById(
@@ -155,5 +157,17 @@ public class CourseController {
         );
     }
 
+    //to calculate total enrolls vai each course
+    @GetMapping("/{courseId}/enrollments/count")
+    public ResponseEntity<ApiResponse<Long>> getEnrollmentCount(
+            @PathVariable Long courseId
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        enrollmentService.getEnrollmentCount(courseId),
+                        "Enrollment count retrieved successfully"
+                )
+        );
+    }
 
 }

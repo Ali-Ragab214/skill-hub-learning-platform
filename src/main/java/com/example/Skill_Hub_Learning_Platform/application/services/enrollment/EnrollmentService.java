@@ -1,5 +1,6 @@
 package com.example.Skill_Hub_Learning_Platform.application.services.enrollment;
 
+import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateProgressRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;
 import com.example.Skill_Hub_Learning_Platform.application.responses.PaginationResponse;
 import com.example.Skill_Hub_Learning_Platform.domain.models.User;
@@ -12,4 +13,6 @@ public interface EnrollmentService {
     EnrollmentResponse getEnrollmentDetails(Long courseId, String studentEmail);
     boolean isEnrolled(Long courseId, String studentEmail);
     Long getEnrollmentCount(Long courseId);
+    EnrollmentResponse updateProgress(Long enrollmentId, UpdateProgressRequest request);
+
 }
