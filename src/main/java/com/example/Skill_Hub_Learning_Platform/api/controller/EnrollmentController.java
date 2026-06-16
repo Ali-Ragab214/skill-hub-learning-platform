@@ -1,5 +1,4 @@
 package com.example.Skill_Hub_Learning_Platform.api.controller;
-
 import com.example.Skill_Hub_Learning_Platform.application.dto.request.EnrollmentRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateProgressRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;

@@ -114,6 +114,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
         return enrollmentRepository.countByCourseId(courseId);
     }
 
+    @Transactional
     @Override
     public EnrollmentResponse updateProgress(Long enrollmentId, UpdateProgressRequest request) {
 
@@ -122,8 +123,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
 
         enrollment.setProgressPercentage(request.getProgressPercentage());
 
-        Enrollment updated = enrollmentRepository.save(enrollment);
-        return enrollmentMapper.toResponse(updated) ;
+        return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
     }
 
 
