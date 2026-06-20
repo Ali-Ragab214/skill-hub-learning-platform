@@ -1,6 +1,5 @@
 package com.example.Skill_Hub_Learning_Platform.api.controller;
 import com.example.Skill_Hub_Learning_Platform.application.dto.request.EnrollmentRequest;
-import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateProgressRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;
 import com.example.Skill_Hub_Learning_Platform.application.responses.ApiResponse;
 import com.example.Skill_Hub_Learning_Platform.application.responses.PaginationResponse;
@@ -79,23 +78,6 @@ public class EnrollmentController {
                 )
         );
     }
-
-    //  دا هيتحسب من عدد ال lessons المكتمله وعدد ال lessons الكلي في الكورس
-    // يعني مش مسؤوليه لا الطالب ولا الانستراكتور دا المفروض يتحسب تلقائي
-    @PatchMapping("/{enrollmentId}/progress")
-    public  ResponseEntity<ApiResponse<EnrollmentResponse>> updateProgress(
-            @PathVariable Long enrollmentId,
-            @RequestBody @Valid UpdateProgressRequest request
-    )
-    {
-     return ResponseEntity.ok(
-             ApiResponse.success(
-                     enrollmentService.updateProgress(enrollmentId,request),
-                     "Progress updated successfully"
-             )
-     );
-    }
-
 
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/{courseId}/status")

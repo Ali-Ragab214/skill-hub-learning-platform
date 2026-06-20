@@ -1,6 +1,5 @@
 package com.example.Skill_Hub_Learning_Platform.application.services.enrollment;
 
-import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateProgressRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.BadRequestException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.DuplicateResourceException;
@@ -15,6 +14,7 @@ import com.example.Skill_Hub_Learning_Platform.domain.models.Enrollment;
 import com.example.Skill_Hub_Learning_Platform.domain.models.User;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.CourseRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.EnrollmentRepository;
+import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonProgressRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +29,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
     private final EnrollmentMapper enrollmentMapper;
     private  final UserRepository userRepository;
     private  final CourseRepository courseRepository;
+    private final LessonProgressRepository lessonProgressRepository;
 
 
     @Transactional
@@ -67,6 +68,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
         var student = getStudentByEmail(studentEmail);
         var enrollment = getEnrollmentByCourseAndStudent(courseId, student.getId());
         enrollmentRepository.delete(enrollment);
+        lessonProgressRepository.deleteByStudentIdAndLessonSectionCourseId(student.getId(), courseId);
     }
 
 
@@ -113,19 +115,6 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
         getCourseById(courseId);
         return enrollmentRepository.countByCourseId(courseId);
     }
-
-    @Transactional
-    @Override
-    public EnrollmentResponse updateProgress(Long enrollmentId, UpdateProgressRequest request) {
-
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
-
-        enrollment.setProgressPercentage(request.getProgressPercentage());
-
-        return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
-    }
-
 
     private User getStudentByEmail(String email) {
         return userRepository.findByEmail(email)

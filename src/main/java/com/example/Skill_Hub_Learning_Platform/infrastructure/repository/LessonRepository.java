@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
     List<Lesson> findBySectionIdAndIsPreview(Long sectionId, boolean isPreview);
     void deleteBySectionId(Long sectionId);
@@ -21,4 +24,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     boolean existsByTitleAndSectionId(String title, Long sectionId);
     boolean existsByTitleAndSectionIdAndIdNot(String title, Long sectionId, Long excludeId);
 
+    @Query("SELECT COUNT(l) FROM Lesson l WHERE l.section.course.id = :courseId")
+    long countByCourseId(@Param("courseId") Long courseId);
 }
