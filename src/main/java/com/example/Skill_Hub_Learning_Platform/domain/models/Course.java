@@ -35,20 +35,22 @@ public class Course extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private CourseStatus status = CourseStatus.DRAFT;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
 
-    //avoid cascade.all {make it specific}
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL , orphanRemoval = true)
-//    @Builder.Default
+    @Builder.Default
     private List<Section> sections = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

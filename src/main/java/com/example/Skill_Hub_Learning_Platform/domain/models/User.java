@@ -34,6 +34,7 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
@@ -41,12 +42,15 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Course> courses = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
     @Override

@@ -16,5 +16,6 @@ public class SectionRequest {
     private String title;
 
     @Min(value = 0, message = "Order index cannot be negative")
+    @Builder.Default
     private Integer orderIndex = 0;
 }

@@ -23,11 +23,10 @@ import java.util.List;
 public class Section extends BaseEntity {
 
     @Column(nullable = false)
-    //@Size(min = 2, max = 100, message = "Title must be between 2 and 100 characters")
     private String title;
 
     @Column(nullable = false)
-    //@Min(value = 0, message = "Order index cannot be negative")
+    @Builder.Default
     private Integer orderIndex = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,5 +35,6 @@ public class Section extends BaseEntity {
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
+    @Builder.Default
     private List<Lesson> lessons = new ArrayList<>();
 }

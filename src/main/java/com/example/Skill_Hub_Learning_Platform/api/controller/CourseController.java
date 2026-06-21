@@ -53,6 +53,7 @@ public class CourseController {
     }
 
     @GetMapping("/status")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<CourseResponse>>> getCoursesByStatus(
             @RequestParam CourseStatus status,
             Authentication authentication) {

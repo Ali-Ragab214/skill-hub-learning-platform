@@ -26,6 +26,7 @@ public class Enrollment extends BaseEntity {
     private Course course;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer progressPercentage = 0;
 
     @PrePersist

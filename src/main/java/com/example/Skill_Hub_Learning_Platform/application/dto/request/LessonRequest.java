@@ -26,8 +26,10 @@ public class LessonRequest {
     private Integer duration;
 
     @NotNull(message = "isPreview is required")
+    @Builder.Default
     private Boolean isPreview = false;
 
     @Min(value = 0, message = "Order index cannot be negative")
+    @Builder.Default
     private Integer orderIndex = 0;
 }

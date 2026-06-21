@@ -122,7 +122,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(message, null, HttpStatus.CONFLICT));
     }
 
-    // ...existing code...
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
     public ResponseEntity<ApiResponse<?>> handleInternalAuthException(InternalAuthenticationServiceException ex) {
         log.error("Internal authentication error: {}", ex.getMessage());
         return ResponseEntity.badRequest()
@@ -182,8 +182,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ApiResponse<Void>> handleUnauthorizedException(UnauthorizedException ex) {
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(ApiResponse.error(ex.getMessage()));
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error(ex.getMessage(), null, HttpStatus.UNAUTHORIZED));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
