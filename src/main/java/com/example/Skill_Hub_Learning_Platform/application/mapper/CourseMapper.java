@@ -46,6 +46,7 @@ public class CourseMapper {
                                 ? course.getEnrollments().size()
                                 : 0
                 )
+                .averageRating(course.getAverageRating())
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();
@@ -64,6 +65,7 @@ public class CourseMapper {
                 .instructor(instructor)
                 .sections(List.of())
                 .totalEnrollments(0)
+                .averageRating(0.0)
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();

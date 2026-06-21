@@ -38,6 +38,10 @@ public class Course extends BaseEntity {
     @Builder.Default
     private CourseStatus status = CourseStatus.DRAFT;
 
+    @Column(nullable = false, columnDefinition = "float8 default 0.0")
+    @Builder.Default
+    private Double averageRating = 0.0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;

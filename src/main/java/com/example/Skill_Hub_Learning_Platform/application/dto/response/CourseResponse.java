@@ -22,6 +22,7 @@ public class CourseResponse {
     private UserResponse instructor;
     List<SectionResponse> sections;
     private int totalEnrollments;
+    private Double averageRating;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
