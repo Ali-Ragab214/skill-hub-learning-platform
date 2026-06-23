@@ -11,6 +11,8 @@ import com.example.Skill_Hub_Learning_Platform.domain.models.Section;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.CourseRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
+import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
+import org.springframework.cache.annotation.CacheEvict;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +38,7 @@ public class SectionServiceImpl implements SectionService {
 //dont forget to make sure that section tittle is unique in each course
      //also make sure that the order index is unique in each course => tomorrow
      @Override
-//     @PreAuthorize("hasRole('INSTRUCTOR') and @courseOwnershipChecker.check(#courseId, authentication.name)")
+     @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
      public SectionResponse createSection(Long courseId, SectionRequest request, String instructorEmail) {
          var course = courseRepository.findById(courseId)
                  .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
@@ -107,7 +109,8 @@ public class SectionServiceImpl implements SectionService {
     }
 
 
-    @Override
+     @Override
+     @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
     public SectionResponse updateSection(Long courseId, Long id, SectionRequest request, String instructorEmail) {
         var section = sectionRepository
                 .findByIdAndCourseId(id, courseId)
@@ -131,7 +134,8 @@ public class SectionServiceImpl implements SectionService {
     }
 
 
-    @Override
+     @Override
+     @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
     public void deleteSection(Long courseId, Long id, String instructorEmail) {
         var section = sectionRepository
                 .findByIdAndCourseId(id, courseId)

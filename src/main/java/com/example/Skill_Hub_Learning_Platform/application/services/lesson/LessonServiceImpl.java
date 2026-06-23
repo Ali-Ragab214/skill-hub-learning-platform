@@ -11,6 +11,8 @@ import com.example.Skill_Hub_Learning_Platform.domain.models.Lesson;
 import com.example.Skill_Hub_Learning_Platform.domain.models.Section;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
+import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
+import org.springframework.cache.annotation.CacheEvict;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,7 @@ public class LessonServiceImpl  implements  LessonService{
 
 
     @Override
+    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
     public LessonResponse createLesson(Long courseId, Long sectionId, LessonRequest request, String instructorEmail) {
         Section section = sectionRepository.findByIdAndCourseId(sectionId, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found in this course"));
@@ -80,6 +83,7 @@ public class LessonServiceImpl  implements  LessonService{
     }
 
     @Override
+    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
     public LessonResponse updateLesson(Long courseId, Long sectionId, Long id, LessonRequest request, String instructorEmail) {
 
         Lesson lesson = lessonRepository.findByIdAndSectionIdAndSectionCourseId(id, sectionId, courseId)
@@ -100,6 +104,7 @@ public class LessonServiceImpl  implements  LessonService{
 
 
     @Override
+    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
     public void deleteLesson(Long courseId, Long sectionId, Long id, String instructorEmail) {
 
         Lesson lesson = lessonRepository.findByIdAndSectionIdAndSectionCourseId(id, sectionId, courseId)
