@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,6 +35,7 @@ public class Section extends BaseEntity {
     private Course course;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 25)
     @OrderBy("orderIndex ASC")
     @Builder.Default
     private List<Lesson> lessons = new ArrayList<>();

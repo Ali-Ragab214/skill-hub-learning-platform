@@ -10,12 +10,21 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Formula;
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@NamedEntityGraph(
+        name = "Course.details",
+        attributeNodes = {
+                @NamedAttributeNode("instructor"),
+                @NamedAttributeNode("sections")
+        }
+)
 @Table(name = "courses", uniqueConstraints = @UniqueConstraint(columnNames = "title", name = "uk_course_title"))
 public class Course extends BaseEntity {
 
@@ -47,14 +56,20 @@ public class Course extends BaseEntity {
     private User instructor;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL , orphanRemoval = true)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Section> sections = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    @Formula("(SELECT COUNT(*) FROM enrollments e WHERE e.course_id = id)")
+    private int totalEnrollments;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

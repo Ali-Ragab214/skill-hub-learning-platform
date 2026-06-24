@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @Setter
@@ -42,14 +43,17 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Course> courses = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @BatchSize(size = 25)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 

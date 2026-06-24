@@ -41,11 +41,7 @@ public class CourseMapper {
                 .sections(course.getSections().stream()
                         .map(sectionMapper::toResponse)
                         .toList())
-                .totalEnrollments(
-                        course.getEnrollments() != null
-                                ? course.getEnrollments().size()
-                                : 0
-                )
+                .totalEnrollments(course.getTotalEnrollments())
                 .averageRating(course.getAverageRating())
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())

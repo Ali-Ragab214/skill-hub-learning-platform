@@ -98,7 +98,7 @@ public class CourseServiceImpl implements CourseService {
     @Cacheable(cacheNames = CacheConstants.COURSE, key = "#id",
                unless = "#result.status.name() != 'PUBLISHED'")
     public CourseResponse getCourseById(Long id, String userEmail) {
-        Course course = courseRepository.findById(id)
+        Course course = courseRepository.findCourseWithDetailsById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course", id));
 
         // Security check: Only the course instructor can view unpublished courses
@@ -119,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Cacheable(cacheNames = CacheConstants.ALL)
     public List<CourseResponse> getAllCourses() {
-        return courseRepository.findAll()
+        return courseRepository.findAllWithSectionsAndLessons()
                 .stream()
                 .map(courseMapper::toResponse)
                 .toList();
@@ -129,7 +129,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Cacheable(cacheNames = CacheConstants.PUBLISHED)
     public List<CourseResponse> getAllPublishedCourses() {
-        return courseRepository.findByStatusEquals(CourseStatus.PUBLISHED)
+        return courseRepository.findWithSectionsAndLessonsByStatusEquals(CourseStatus.PUBLISHED)
                 .stream()
                 .map(courseMapper::toResponse)
                 .toList();
