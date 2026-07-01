@@ -7,6 +7,7 @@ import com.example.Skill_Hub_Learning_Platform.application.exceptions.BusinessEx
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.DuplicateResourceException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.ResourceNotFoundException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.UnauthorizedException;
+import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
 import com.example.Skill_Hub_Learning_Platform.application.mapper.ReviewMapper;
 import com.example.Skill_Hub_Learning_Platform.application.responses.PaginationResponse;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.Role;
@@ -18,6 +19,8 @@ import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.Enrollm
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.ReviewRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,10 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.INSTRUCTOR_DASHBOARD, allEntries = true),
+            @CacheEvict(cacheNames = {CacheConstants.COURSE, CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public ReviewResponse createReview(Long courseId, ReviewRequest request, String studentEmail) {
         User student = getStudentByEmail(studentEmail);
 
@@ -66,6 +73,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.INSTRUCTOR_DASHBOARD, allEntries = true),
+            @CacheEvict(cacheNames = {CacheConstants.COURSE, CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public ReviewResponse updateReview(Long courseId, UpdateReviewRequest request, String studentEmail) {
         User student = getStudentByEmail(studentEmail);
 
@@ -86,6 +97,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.INSTRUCTOR_DASHBOARD, allEntries = true),
+            @CacheEvict(cacheNames = {CacheConstants.COURSE, CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public void deleteReview(Long courseId, String studentEmail) {
         User student = getStudentByEmail(studentEmail);
 

@@ -13,6 +13,7 @@ import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonR
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
 import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,10 @@ public class LessonServiceImpl  implements  LessonService{
 
 
     @Override
-    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId"),
+            @CacheEvict(cacheNames = {CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public LessonResponse createLesson(Long courseId, Long sectionId, LessonRequest request, String instructorEmail) {
         Section section = sectionRepository.findByIdAndCourseId(sectionId, courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found in this course"));
@@ -83,7 +87,10 @@ public class LessonServiceImpl  implements  LessonService{
     }
 
     @Override
-    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId"),
+            @CacheEvict(cacheNames = {CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public LessonResponse updateLesson(Long courseId, Long sectionId, Long id, LessonRequest request, String instructorEmail) {
 
         Lesson lesson = lessonRepository.findByIdAndSectionIdAndSectionCourseId(id, sectionId, courseId)
@@ -104,7 +111,10 @@ public class LessonServiceImpl  implements  LessonService{
 
 
     @Override
-    @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.COURSE, key = "#courseId"),
+            @CacheEvict(cacheNames = {CacheConstants.ALL, CacheConstants.PUBLISHED}, allEntries = true)
+    })
     public void deleteLesson(Long courseId, Long sectionId, Long id, String instructorEmail) {
 
         Lesson lesson = lessonRepository.findByIdAndSectionIdAndSectionCourseId(id, sectionId, courseId)
