@@ -28,8 +28,15 @@ public class CourseMapper {
     }
 
     public CourseResponse toResponse(Course course) {
+        return toResponse(course, null);
+    }
+
+    public CourseResponse toResponse(Course course, Long currentUserId) {
         UserResponse instructor =
                 userMapper.toUserResponse(course.getInstructor());
+        boolean isOwner = currentUserId != null
+                && course.getInstructor() != null
+                && course.getInstructor().getId().equals(currentUserId);
         return CourseResponse.builder()
                 .id(course.getId())
                 .title(course.getTitle())
@@ -43,6 +50,7 @@ public class CourseMapper {
                         .toList())
                 .totalEnrollments(course.getTotalEnrollments())
                 .averageRating(course.getAverageRating())
+                .isOwner(isOwner)
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();
@@ -62,6 +70,7 @@ public class CourseMapper {
                 .sections(List.of())
                 .totalEnrollments(0)
                 .averageRating(0.0)
+                .isOwner(true)
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
                 .build();

@@ -23,6 +23,7 @@ public class CourseResponse {
     List<SectionResponse> sections;
     private int totalEnrollments;
     private Double averageRating;
+    private boolean isOwner;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

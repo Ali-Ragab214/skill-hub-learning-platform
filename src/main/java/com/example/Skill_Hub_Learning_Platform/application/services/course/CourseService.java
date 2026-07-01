@@ -2,6 +2,7 @@ package com.example.Skill_Hub_Learning_Platform.application.services.course;
 import com.example.Skill_Hub_Learning_Platform.application.dto.request.CourseRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.request.UpdateCourseRequest;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.CourseResponse;
+import com.example.Skill_Hub_Learning_Platform.application.dto.response.InstructorDashboardResponse;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseLevel;
 import com.example.Skill_Hub_Learning_Platform.domain.enums.CourseStatus;
 import java.util.List;
@@ -37,6 +38,8 @@ public interface CourseService {
 
     // Check if user is instructor of a course
     boolean isInstructor(Long courseId, String userEmail);
+
+    InstructorDashboardResponse getDashboard(String instructorEmail);
 
    // List<CourseResponse> getCoursesByInstructorEmail(String email);
 }
