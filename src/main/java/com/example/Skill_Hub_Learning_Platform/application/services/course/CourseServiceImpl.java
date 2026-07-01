@@ -21,6 +21,7 @@ import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.ReviewR
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.UserRepository;
 import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -121,6 +123,7 @@ public class CourseServiceImpl implements CourseService {
     @Cacheable(cacheNames = CacheConstants.COURSE, key = "#id + (#userEmail != null ? ':' + #userEmail : '')",
                unless = "#result.status.name() != 'PUBLISHED'")
     public CourseResponse getCourseById(Long id, String userEmail) {
+        log.info("CACHE_MISS — fetching course {} from database", id);
         Course course = courseRepository.findCourseWithDetailsById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course", id));
 
