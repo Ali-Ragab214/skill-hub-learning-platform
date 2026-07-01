@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface CourseRepository  extends JpaRepository<Course,Long> {
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @EntityGraph("Course.details")
     List<Course> findByInstructorId(Long instructorId);
