@@ -1,6 +1,8 @@
 package com.example.Skill_Hub_Learning_Platform.application.services.enrollment;
 
+import com.example.Skill_Hub_Learning_Platform.application.cache.CacheConstants;
 import com.example.Skill_Hub_Learning_Platform.application.dto.response.EnrollmentResponse;
+import com.example.Skill_Hub_Learning_Platform.application.dto.response.SectionProgressResponse;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.BadRequestException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.DuplicateResourceException;
 import com.example.Skill_Hub_Learning_Platform.application.exceptions.ResourceNotFoundException;
@@ -15,8 +17,15 @@ import com.example.Skill_Hub_Learning_Platform.domain.models.User;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.CourseRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.EnrollmentRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.LessonProgressRepository;
+
+import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.SectionRepository;
 import com.example.Skill_Hub_Learning_Platform.infrastructure.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,16 +33,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollmentServiceImpl implements  EnrollmentService {
-    private  final EnrollmentRepository enrollmentRepository;
+public class EnrollmentServiceImpl implements EnrollmentService {
+    private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
-    private  final UserRepository userRepository;
-    private  final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final LessonProgressRepository lessonProgressRepository;
+    private final SectionRepository sectionRepository;
 
 
     @Transactional
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.ENROLLMENT_DETAILS, key = "#studentEmail + ':' + #courseId"),
+            @CacheEvict(cacheNames = CacheConstants.INSTRUCTOR_DASHBOARD, allEntries = true)
+    })
     public EnrollmentResponse enroll(Long courseId, String studentEmail) {
         var student = getStudentByEmail(studentEmail);
 
@@ -64,6 +78,10 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
 
     @Transactional
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = CacheConstants.ENROLLMENT_DETAILS, key = "#studentEmail + ':' + #courseId"),
+            @CacheEvict(cacheNames = CacheConstants.INSTRUCTOR_DASHBOARD, allEntries = true)
+    })
     public void unenroll(Long courseId, String studentEmail) {
         var student = getStudentByEmail(studentEmail);
         var enrollment = getEnrollmentByCourseAndStudent(courseId, student.getId());
@@ -79,7 +97,7 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
 
         Page<EnrollmentResponse> mappedPage = enrollmentRepository
                 .findByStudentId(student.getId(), pageable)
-                .map(enrollmentMapper::toResponse);
+                .map(enrollment -> buildEnrollmentResponse(enrollment, student.getId()));
 
         return new PaginationResponse<>(
                 mappedPage.getContent(),
@@ -95,10 +113,11 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
 
     @Transactional(readOnly = true)
     @Override
+    @Cacheable(cacheNames = CacheConstants.ENROLLMENT_DETAILS, key = "#studentEmail + ':' + #courseId")
     public EnrollmentResponse getEnrollmentDetails(Long courseId, String studentEmail) {
         var student = getStudentByEmail(studentEmail);
         var enrollment = getEnrollmentByCourseAndStudent(courseId, student.getId());
-        return enrollmentMapper.toResponse(enrollment);
+        return buildEnrollmentResponse(enrollment, student.getId());
     }
 
     @Transactional(readOnly = true)
@@ -114,6 +133,28 @@ public class EnrollmentServiceImpl implements  EnrollmentService {
     public Long getEnrollmentCount(Long courseId) {
         getCourseById(courseId);
         return enrollmentRepository.countByCourseId(courseId);
+    }
+
+    private EnrollmentResponse buildEnrollmentResponse(Enrollment enrollment, Long studentId) {
+        Long courseId = enrollment.getCourse().getId();
+
+        List<Object[]> rows = sectionRepository.findSectionProgressByCourseId(courseId, studentId);
+
+        int totalLessons = 0;
+        int completedLessons = 0;
+        List<SectionProgressResponse> sectionProgress = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            Long sectionId = (Long) row[0];
+            String sectionTitle = (String) row[1];
+            int secTotal = ((Number) row[2]).intValue();
+            int secCompleted = ((Number) row[3]).intValue();
+            totalLessons += secTotal;
+            completedLessons += secCompleted;
+            sectionProgress.add(new SectionProgressResponse(sectionId, sectionTitle, secCompleted, secTotal));
+        }
+
+        return enrollmentMapper.toResponse(enrollment, completedLessons, totalLessons, sectionProgress);
     }
 
     private User getStudentByEmail(String email) {

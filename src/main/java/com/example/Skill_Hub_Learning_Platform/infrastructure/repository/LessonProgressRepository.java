@@ -28,6 +28,12 @@ public interface LessonProgressRepository extends JpaRepository<LessonProgress, 
            "AND lp.isCompleted = true")
     long countCompletedByStudentIdAndCourseId(@Param("studentId") Long studentId, @Param("courseId") Long courseId);
 
+    @Query("SELECT COUNT(lp) FROM LessonProgress lp " +
+           "WHERE lp.lesson.section.id = :sectionId " +
+           "AND lp.student.id = :studentId " +
+           "AND lp.isCompleted = true")
+    long countCompletedByStudentIdAndSectionId(@Param("studentId") Long studentId, @Param("sectionId") Long sectionId);
+
     @Modifying
     @Query("DELETE FROM LessonProgress lp " +
            "WHERE lp.student.id = :studentId " +
